@@ -1,0 +1,10 @@
+:HL["/_next/static/chunks/c98a649f53546446.css","style"]
+:HL["/_next/static/chunks/8e4c00320cd5a88d.css","style"]
+:HL["/_next/static/media/03fc1b4a8d284b5e-s.p.af4fcd24.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/2a65768255d6b625-s.p.d19752fb.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/797e433ab948586e-s.p.dbea232f.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/media/83afe278b6a6bb3c-s.p.3a6ba036.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:wght@400;600;800&display=swap","style"]
+:HL["https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,700,900&f[]=general-sans@400,500,600,700&display=swap","style"]
+:HL["https://fonts.cdnfonts.com/css/monument-extended","style"]
+0:{"buildId":"hCzh9iBn30D6ny0V8Qj3c","tree":{"name":"","paramType":null,"paramKey":"","hasRuntimePrefetch":false,"slots":{"children":{"name":"(site)","paramType":null,"paramKey":"(site)","hasRuntimePrefetch":false,"slots":{"children":{"name":"case-studies","paramType":null,"paramKey":"case-studies","hasRuntimePrefetch":false,"slots":{"children":{"name":"n8n-workflows","paramType":null,"paramKey":"n8n-workflows","hasRuntimePrefetch":false,"slots":{"children":{"name":"__PAGE__","paramType":null,"paramKey":"__PAGE__","hasRuntimePrefetch":false,"slots":null,"isRootLayout":false}},"isRootLayout":false}},"isRootLayout":false}},"isRootLayout":false}},"isRootLayout":true},"staleTime":300}

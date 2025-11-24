@@ -1,0 +1,17 @@
+{
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/(site)/layout,_N_T_/(site)/demo/layout,_N_T_/(site)/demo/scroll-demo/layout,_N_T_/(site)/demo/scroll-demo/page,_N_T_/demo/scroll-demo"
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/!KHNpdGUp/demo/scroll-demo/__PAGE__",
+    "/!KHNpdGUp/demo/scroll-demo",
+    "/!KHNpdGUp/demo",
+    "/!KHNpdGUp",
+    "/_index",
+    "/_head"
+  ]
+}

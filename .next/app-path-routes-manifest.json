@@ -1,0 +1,12 @@
+{
+  "/(site)/case-studies/chatbots/page": "/case-studies/chatbots",
+  "/(site)/case-studies/flutter-app/page": "/case-studies/flutter-app",
+  "/(site)/case-studies/lead-gen/page": "/case-studies/lead-gen",
+  "/(site)/case-studies/n8n-workflows/page": "/case-studies/n8n-workflows",
+  "/(site)/demo/scroll-demo/page": "/demo/scroll-demo",
+  "/(site)/demo/shader-demo/page": "/demo/shader-demo",
+  "/_global-error/page": "/_global-error",
+  "/_not-found/page": "/_not-found",
+  "/api/contact/route": "/api/contact",
+  "/page": "/"
+}

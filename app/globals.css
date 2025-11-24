@@ -1,0 +1,201 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* New Black & Red Chrome Theme */
+  --background: oklch(0 0 0); /* #000000 pure black */
+  --foreground: oklch(0.93 0 0); /* #EDEDED text */
+  --card: oklch(0.08 0 0); /* slightly lighter black for cards */
+  --card-foreground: oklch(0.93 0 0);
+  --popover: oklch(0.08 0 0);
+  --popover-foreground: oklch(0.93 0 0);
+  --primary: oklch(0.55 0.22 25); /* #EC1C24 primary red */
+  --primary-foreground: oklch(0.93 0 0);
+  --secondary: oklch(0.65 0.18 20); /* #FF5C5C soft red */
+  --secondary-foreground: oklch(0 0 0);
+  --muted: oklch(0.15 0 0); /* dark grey for borders */
+  --muted-foreground: oklch(0.6 0 0); /* #9A9A9A subtext */
+  --accent: oklch(0.65 0.18 20); /* #FF5C5C soft red for highlights */
+  --accent-foreground: oklch(0 0 0);
+  --chrome: oklch(0.77 0 0); /* #C4C4C4 chrome silver */
+  --chrome-foreground: oklch(0 0 0);
+  --destructive: oklch(0.55 0.22 25);
+  --destructive-foreground: oklch(0.93 0 0);
+  --border: oklch(0.2 0 0); /* subtle dark border */
+  --input: oklch(0.15 0 0);
+  --ring: oklch(0.55 0.22 25);
+  --radius: 0.75rem;
+}
+
+.dark {
+  --background: oklch(0 0 0);
+  --foreground: oklch(0.93 0 0);
+  --card: oklch(0.08 0 0);
+  --card-foreground: oklch(0.93 0 0);
+  --popover: oklch(0.08 0 0);
+  --popover-foreground: oklch(0.93 0 0);
+  --primary: oklch(0.55 0.22 25);
+  --primary-foreground: oklch(0.93 0 0);
+  --secondary: oklch(0.65 0.18 20);
+  --secondary-foreground: oklch(0 0 0);
+  --muted: oklch(0.15 0 0);
+  --muted-foreground: oklch(0.6 0 0);
+  --accent: oklch(0.65 0.18 20);
+  --accent-foreground: oklch(0 0 0);
+  --chrome: oklch(0.77 0 0);
+  --chrome-foreground: oklch(0 0 0);
+  --destructive: oklch(0.55 0.22 25);
+  --destructive-foreground: oklch(0.93 0 0);
+  --border: oklch(0.2 0 0);
+  --input: oklch(0.15 0 0);
+  --ring: oklch(0.55 0.22 25);
+}
+
+@theme inline {
+  /* New fonts - Monument Extended, Satoshi, Geist Mono */
+  --font-sans: "Satoshi", "Inter", system-ui, sans-serif;
+  --font-serif: "Monument Extended", "Inter", system-ui, sans-serif;
+  --font-mono: "Geist Mono", "Geist Mono Fallback", monospace;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-chrome: var(--chrome);
+  --color-chrome-foreground: var(--chrome-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 8px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+
+  /* Premium Monument Extended headings */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-serif font-black tracking-tighter uppercase;
+    text-wrap: balance;
+  }
+
+  h1 {
+    @apply text-6xl lg:text-9xl;
+  }
+
+  h2 {
+    @apply text-5xl lg:text-7xl;
+  }
+
+  h3 {
+    @apply text-3xl lg:text-5xl;
+  }
+}
+
+@layer utilities {
+  /* New red gradient utilities */
+  .text-gradient {
+    background: linear-gradient(135deg, #ec1c24 0%, #ff5c5c 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .text-gradient-chrome {
+    background: linear-gradient(135deg, #c4c4c4 0%, #ededed 50%, #c4c4c4 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .text-gradient-red {
+    background: linear-gradient(135deg, #ff5c5c 0%, #ec1c24 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .red-glow {
+    box-shadow: 0 0 10px rgba(236, 28, 36, 0.5), 0 0 20px rgba(236, 28, 36, 0.3), 0 0 30px rgba(255, 92, 92, 0.2);
+  }
+
+  .red-glow-hover:hover {
+    box-shadow: 0 0 15px rgba(236, 28, 36, 0.7), 0 0 30px rgba(236, 28, 36, 0.5), 0 0 45px rgba(255, 92, 92, 0.4);
+  }
+
+  .chrome-border {
+    border: 1px solid #c4c4c4;
+  }
+
+  .glassmorphism {
+    background: rgba(10, 10, 10, 0.8);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(196, 196, 196, 0.2);
+  }
+
+  .glassmorphism-card {
+    background: linear-gradient(145deg, rgba(15, 15, 15, 0.95), rgba(5, 5, 5, 0.9));
+    backdrop-filter: blur(40px);
+    border: 1px solid rgba(196, 196, 196, 0.15);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 20px rgba(236, 28, 36, 0.05);
+  }
+
+  .premium-card-hover {
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .premium-card-hover:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.7), 0 0 30px rgba(236, 28, 36, 0.2), 0 0 40px rgba(255, 92, 92, 0.1);
+    border-color: rgba(236, 28, 36, 0.5);
+  }
+
+  .neon-border {
+    position: relative;
+    border: 2px solid transparent;
+    background: linear-gradient(var(--background), var(--background)) padding-box,
+      linear-gradient(135deg, #ec1c24, #ff5c5c) border-box;
+  }
+
+  .chrome-stroke {
+    -webkit-text-stroke: 1px #c4c4c4;
+    text-stroke: 1px #c4c4c4;
+  }
+
+  .text-shadow-red {
+    text-shadow: 0 0 10px rgba(236, 28, 36, 0.5), 0 0 20px rgba(255, 92, 92, 0.3), 0 2px 4px rgba(0, 0, 0, 0.8);
+  }
+}

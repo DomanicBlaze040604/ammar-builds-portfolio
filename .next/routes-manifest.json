@@ -1,0 +1,104 @@
+{
+  "version": 3,
+  "pages404": true,
+  "caseSensitive": false,
+  "basePath": "",
+  "redirects": [
+    {
+      "source": "/:path+/",
+      "destination": "/:path+",
+      "internal": true,
+      "priority": true,
+      "statusCode": 308,
+      "regex": "^(?:/((?:[^/]+?)(?:/(?:[^/]+?))*))/$"
+    }
+  ],
+  "headers": [],
+  "rewrites": {
+    "beforeFiles": [],
+    "afterFiles": [],
+    "fallback": []
+  },
+  "dynamicRoutes": [],
+  "staticRoutes": [
+    {
+      "page": "/",
+      "regex": "^/(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/(?:/)?$"
+    },
+    {
+      "page": "/_global-error",
+      "regex": "^/_global\\-error(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/_global\\-error(?:/)?$"
+    },
+    {
+      "page": "/_not-found",
+      "regex": "^/_not\\-found(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/_not\\-found(?:/)?$"
+    },
+    {
+      "page": "/api/contact",
+      "regex": "^/api/contact(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/contact(?:/)?$"
+    },
+    {
+      "page": "/case-studies/chatbots",
+      "regex": "^/case\\-studies/chatbots(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/case\\-studies/chatbots(?:/)?$"
+    },
+    {
+      "page": "/case-studies/flutter-app",
+      "regex": "^/case\\-studies/flutter\\-app(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/case\\-studies/flutter\\-app(?:/)?$"
+    },
+    {
+      "page": "/case-studies/lead-gen",
+      "regex": "^/case\\-studies/lead\\-gen(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/case\\-studies/lead\\-gen(?:/)?$"
+    },
+    {
+      "page": "/case-studies/n8n-workflows",
+      "regex": "^/case\\-studies/n8n\\-workflows(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/case\\-studies/n8n\\-workflows(?:/)?$"
+    },
+    {
+      "page": "/demo/scroll-demo",
+      "regex": "^/demo/scroll\\-demo(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/demo/scroll\\-demo(?:/)?$"
+    },
+    {
+      "page": "/demo/shader-demo",
+      "regex": "^/demo/shader\\-demo(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/demo/shader\\-demo(?:/)?$"
+    }
+  ],
+  "dataRoutes": [],
+  "rsc": {
+    "header": "rsc",
+    "varyHeader": "rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch",
+    "prefetchHeader": "next-router-prefetch",
+    "didPostponeHeader": "x-nextjs-postponed",
+    "contentTypeHeader": "text/x-component",
+    "suffix": ".rsc",
+    "prefetchSuffix": ".prefetch.rsc",
+    "prefetchSegmentHeader": "next-router-segment-prefetch",
+    "prefetchSegmentSuffix": ".segment.rsc",
+    "prefetchSegmentDirSuffix": ".segments",
+    "clientParamParsing": false,
+    "dynamicRSCPrerender": false
+  },
+  "rewriteHeaders": {
+    "pathHeader": "x-nextjs-rewritten-path",
+    "queryHeader": "x-nextjs-rewritten-query"
+  }
+}

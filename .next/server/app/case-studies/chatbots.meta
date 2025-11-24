@@ -1,0 +1,17 @@
+{
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/(site)/layout,_N_T_/(site)/case-studies/layout,_N_T_/(site)/case-studies/chatbots/layout,_N_T_/(site)/case-studies/chatbots/page,_N_T_/case-studies/chatbots"
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/!KHNpdGUp/case-studies/chatbots/__PAGE__",
+    "/!KHNpdGUp/case-studies/chatbots",
+    "/!KHNpdGUp/case-studies",
+    "/!KHNpdGUp",
+    "/_index",
+    "/_head"
+  ]
+}

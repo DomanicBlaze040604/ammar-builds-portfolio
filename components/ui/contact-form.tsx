@@ -164,7 +164,7 @@ export function ContactForm() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <Label htmlFor="budget" className="text-base font-semibold">
-                Project Budget
+                Project Budget (INR)
               </Label>
               <select
                 id="budget"
@@ -173,10 +173,10 @@ export function ContactForm() {
                 className="w-full bg-background border-2 border-border hover:border-primary/50 focus:border-primary transition-colors h-12 text-base px-3 rounded-md"
               >
                 <option value="">Select range</option>
-                <option value="<$5k">Less than $5,000</option>
-                <option value="$5k-$10k">$5,000 - $10,000</option>
-                <option value="$10k-$25k">$10,000 - $25,000</option>
-                <option value="$25k+">$25,000+</option>
+                <option value="₹30k-₹50k">₹30,000 - ₹50,000</option>
+                <option value="₹50k-₹75k">₹50,000 - ₹75,000</option>
+                <option value="₹75k-₹1L">₹75,000 - ₹1,00,000</option>
+                <option value="₹1L+">₹1,00,000+</option>
               </select>
             </div>
 

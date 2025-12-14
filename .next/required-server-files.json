@@ -4,7 +4,7 @@
     "env": {},
     "webpack": null,
     "typescript": {
-      "ignoreBuildErrors": true
+      "ignoreBuildErrors": false
     },
     "typedRoutes": false,
     "distDir": ".next",
@@ -20,7 +20,7 @@
       "jsx",
       "js"
     ],
-    "poweredByHeader": true,
+    "poweredByHeader": false,
     "compress": true,
     "images": {
       "deviceSizes": [
@@ -34,6 +34,7 @@
         3840
       ],
       "imageSizes": [
+        16,
         32,
         48,
         64,
@@ -49,7 +50,8 @@
       "disableStaticImages": false,
       "minimumCacheTTL": 14400,
       "formats": [
-        "image/webp"
+        "image/webp",
+        "image/avif"
       ],
       "maximumRedirects": 3,
       "dangerouslyAllowLocalIP": false,
@@ -95,7 +97,7 @@
       "qualities": [
         75
       ],
-      "unoptimized": true
+      "unoptimized": false
     },
     "devIndicators": {
       "position": "bottom-left"
@@ -195,9 +197,9 @@
       "imgOptSkipMetadata": null,
       "isrFlushToDisk": true,
       "workerThreads": false,
-      "optimizeCss": false,
+      "optimizeCss": true,
       "nextScriptWorkers": false,
-      "scrollRestoration": false,
+      "scrollRestoration": true,
       "externalDir": false,
       "disableOptimizedLoading": false,
       "gzipSize": true,
@@ -320,7 +322,14 @@
     "turbopack": {
       "root": "E:\\ammar-builds-portfolio"
     },
-    "distDirRoot": ".next"
+    "distDirRoot": ".next",
+    "_originalRedirects": [
+      {
+        "source": "/contact",
+        "destination": "/#contact",
+        "permanent": true
+      }
+    ]
   },
   "appDir": "E:\\ammar-builds-portfolio",
   "relativeAppDir": "",
@@ -339,7 +348,9 @@
     ".next\\BUILD_ID",
     ".next\\server\\next-font-manifest.js",
     ".next\\server\\next-font-manifest.json",
-    ".next\\required-server-files.json"
+    ".next\\required-server-files.json",
+    ".next\\static\\chunks\\8e4c00320cd5a88d.css",
+    ".next\\static\\chunks\\c98a649f53546446.css"
   ],
   "ignore": []
 }

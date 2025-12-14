@@ -44,11 +44,61 @@ export const metadata: Metadata = {
   title: "Ammar Builds — Freelance Software Developer | React, Next.js, AI",
   description:
     "Full-stack software developer — React, Next.js, TS, AI/ML — shipping enterprise & startup web apps. Worked with governments of Goa, Himachal Pradesh, and Republic of Dominica.",
-  generator: "v0.app",
+  generator: "Next.js",
+  keywords: [
+    "freelance developer",
+    "React developer",
+    "Next.js developer", 
+    "full-stack developer",
+    "AI/ML developer",
+    "TypeScript developer",
+    "web development",
+    "software engineer",
+    "India",
+    "Mumbai"
+  ],
+  authors: [{ name: "Ammar", url: "https://ammarbuilds.com" }],
+  creator: "Ammar",
+  publisher: "Ammar Builds",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: process.env.NEXT_PUBLIC_SITE_URL || 'https://ammarbuilds.com',
+    title: 'Ammar Builds — Freelance Software Developer',
+    description: 'Full-stack software developer specializing in React, Next.js, TypeScript, and AI/ML solutions.',
+    siteName: 'Ammar Builds',
+    images: [
+      {
+        url: '/placeholder-logo.png',
+        width: 1200,
+        height: 630,
+        alt: 'Ammar Builds - Software Developer',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Ammar Builds — Freelance Software Developer',
+    description: 'Full-stack software developer specializing in React, Next.js, TypeScript, and AI/ML solutions.',
+    images: ['/placeholder-logo.png'],
+  },
   icons: {
     icon: "/favicon.jpg",
     apple: "/favicon.jpg",
+    shortcut: "/favicon.jpg",
   },
+  manifest: "/manifest.json",
 }
 
 export default function RootLayout({

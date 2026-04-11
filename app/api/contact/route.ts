@@ -2,8 +2,6 @@ import { NextResponse } from "next/server"
 import { Resend } from "resend"
 import { headers } from "next/headers"
 
-const resend = new Resend(process.env.RESEND_API_KEY)
-
 // Simple rate limiting store (in production, use Redis or similar)
 const rateLimitStore = new Map<string, { count: number; resetTime: number }>()
 
@@ -40,6 +38,7 @@ function checkRateLimit(ip: string): boolean {
 
 export async function POST(request: Request) {
   try {
+    const resend = new Resend(process.env.RESEND_API_KEY)
     // Get client IP for rate limiting
     const headersList = await headers()
     const forwarded = headersList.get("x-forwarded-for")

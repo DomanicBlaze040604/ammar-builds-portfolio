@@ -169,16 +169,19 @@ export default function Home() {
               />
             </motion.div>
 
+            {/* H1 is outside opacity:0 wrapper so crawlers can read it */}
+            <h1 className="text-7xl lg:text-9xl font-bold tracking-tighter leading-none">
+              <span className="block text-gradient text-shadow-neon">Ammar</span>
+              <span className="block text-gradient-neon text-shadow-neon">Builds</span>
+            </h1>
+
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
               className="space-y-8"
             >
-              <h1 className="text-7xl lg:text-9xl font-bold tracking-tighter leading-none">
-                <span className="block text-gradient text-shadow-neon">Ammar</span>
-                <span className="block text-gradient-neon text-shadow-neon">Builds</span>
-              </h1>
+              <span className="sr-only">Ammar Builds — Freelance Software Developer</span>
 
               <p className="text-2xl lg:text-3xl font-light text-muted-foreground max-w-3xl mx-auto leading-relaxed">
                 Elite software development for businesses that demand excellence

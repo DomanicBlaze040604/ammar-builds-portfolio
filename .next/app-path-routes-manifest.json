@@ -9,5 +9,7 @@
   "/_not-found/page": "/_not-found",
   "/api/contact/route": "/api/contact",
   "/api/sitemap/route": "/api/sitemap",
-  "/page": "/"
+  "/api/test-env/route": "/api/test-env",
+  "/page": "/",
+  "/sitemap.xml/route": "/sitemap.xml"
 }

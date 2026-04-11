@@ -16,11 +16,27 @@ import AboutServices from "@/components/about-services"
 
 const projects = [
   {
+    title: "Forzeo Dashboard",
+    description: "GEO Analytics Dashboard — AI Search Monitoring & Brand Visibility",
+    url: "https://app.forzeo.com",
+    thumbnail: "https://forzeo.com/assets/forzeo-logo-BqX0_iQz.svg",
+    thumbnailStyle: "contain" as const,
+    category: "AI/Analytics",
+  },
+  {
     title: "Government of the Republic of Dominica",
     description: "Official News & Information Portal",
     url: "https://www.dominicanews.dm",
     thumbnail: "/images/dn-logo.png",
     category: "Government",
+  },
+  {
+    title: "SeenIt Digital",
+    description: "India's First Video-First UGC Trust Review Platform",
+    url: "https://seenitdigital.netlify.app",
+    thumbnail: "https://seenitdigital.netlify.app/favicon.ico",
+    thumbnailStyle: "contain" as const,
+    category: "Social/UGC",
   },
   {
     title: "Express Impex",
@@ -56,6 +72,14 @@ const projects = [
     url: "https://www.easybezy.in",
     thumbnail: "https://files.catbox.moe/8mx5um.jpg",
     category: "Digital Services",
+  },
+  {
+    title: "Forzeo",
+    description: "AI Visibility Analytics & GEO Platform for Enterprise Brands",
+    url: "https://forzeo.com",
+    thumbnail: "https://forzeo.com/assets/forzeo-logo-BqX0_iQz.svg",
+    thumbnailStyle: "contain" as const,
+    category: "AI/Analytics",
   },
   {
     title: "ZuZi Fashion",

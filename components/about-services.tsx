@@ -50,10 +50,10 @@ const AboutServices = () => {
       src: "https://images.unsplash.com/photo-1677442136019-21780ecad995?q=80&w=3540&auto=format&fit=crop",
     },
     {
-      title: "Google Solution Challenge",
-      role: "Global Top 100 Finalist | 2024",
+      title: "Google Solution Challenge 2025",
+      role: "Global Top 100 Finalist | 2025",
       quote:
-        "Selected among the top 100 teams globally in Google's prestigious Solution Challenge, building an AI-powered solution addressing critical social impact challenges.",
+        "Selected among the top 100 teams globally in Google's prestigious Solution Challenge 2025, building an AI-powered solution addressing critical social impact challenges.",
       src: "https://images.unsplash.com/photo-1573804633927-bfcbcd909acd?q=80&w=3540&auto=format&fit=crop",
     },
     {
@@ -82,7 +82,7 @@ const AboutServices = () => {
   const highlights = [
     { label: "Projects Delivered", value: "50+" },
     { label: "Same-Day MVP", value: "2hrs" },
-    { label: "Google Top 100", value: "2024" },
+    { label: "GSC Top 100", value: "2025" },
     { label: "B.E. AI&ML", value: "2025" },
   ]
 

@@ -5,7 +5,6 @@ const nextConfig = {
   },
   experimental: {
     optimizeCss: true, // Enable CSS optimization
-    scrollRestoration: true, // Better scroll behavior
   },
   compress: true, // Enable gzip compression
   poweredByHeader: false, // Remove X-Powered-By header for security
@@ -16,6 +15,8 @@ const nextConfig = {
     formats: ['image/webp', 'image/avif'], // Modern image formats
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    dangerouslyAllowSVG: true,
+    contentSecurityPolicy: "default-src 'none'; style-src 'unsafe-inline'; sandbox;",
     remotePatterns: [
       {
         protocol: 'https',
@@ -24,6 +25,10 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'images.pexels.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
       },
       {
         protocol: 'https',
@@ -44,6 +49,14 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'hp.gov.in',
+      },
+      {
+        protocol: 'https',
+        hostname: 'forzeo.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'seenitdigital.netlify.app',
       },
     ],
   },

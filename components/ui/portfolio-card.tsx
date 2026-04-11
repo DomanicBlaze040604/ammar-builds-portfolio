@@ -12,6 +12,7 @@ interface Project {
   url: string
   thumbnail: string
   category: string
+  thumbnailStyle?: "cover" | "contain"
 }
 
 interface PortfolioCardProps {
@@ -26,22 +27,23 @@ export function PortfolioCard({ project, index }: PortfolioCardProps) {
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{
-        delay: index * 0.08,
-        duration: 0.7,
+        delay: Math.min(index * 0.06, 0.36),
+        duration: 0.5,
         type: "spring",
-        stiffness: 100,
+        stiffness: 120,
+        damping: 20,
       }}
       className="h-full"
     >
       <Card className="glassmorphism-card premium-card-hover h-full overflow-hidden group relative rounded-2xl">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 pointer-events-none" />
 
-        <div className="relative h-64 overflow-hidden">
+        <div className={`relative h-64 overflow-hidden${project.thumbnailStyle === "contain" ? " bg-zinc-950 flex items-center justify-center" : ""}`}>
           <Image
             src={project.thumbnail || "/placeholder.svg"}
             alt={project.title}
             fill
-            className="object-cover transition-all duration-700 group-hover:scale-110"
+            className={`transition-all duration-700 group-hover:scale-110 ${project.thumbnailStyle === "contain" ? "object-contain p-8" : "object-cover"}`}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent" />
 

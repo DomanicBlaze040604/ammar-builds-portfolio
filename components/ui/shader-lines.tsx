@@ -9,31 +9,32 @@ export function ShaderAnimation() {
     const canvas = canvasRef.current
     if (!canvas) return
 
+    // Skip heavy animation on low-end devices (navigator.hardwareConcurrency <= 4)
+    const isLowEnd = typeof navigator !== "undefined" && navigator.hardwareConcurrency <= 4
+    const particlesCount = isLowEnd ? 400 : 700
+
     let animationFrameId: number
     let three: any
 
-    // Dynamic import of Three.js
     const initShader = async () => {
       try {
         three = await import("three")
 
         const scene = new three.Scene()
         const camera = new three.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
-        const renderer = new three.WebGLRenderer({ canvas, alpha: true, antialias: true })
+        const renderer = new three.WebGLRenderer({ canvas, alpha: true, antialias: false })
 
         renderer.setSize(window.innerWidth, window.innerHeight)
+        // Cap pixel ratio at 1.5 — prevents heavy GPU load on hi-dpi screens
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5))
         renderer.setClearColor(0x000000, 0)
         camera.position.z = 5
 
-        // Create particle system for elegant background
         const particlesGeometry = new three.BufferGeometry()
-        const particlesCount = 1000
         const posArray = new Float32Array(particlesCount * 3)
-
         for (let i = 0; i < particlesCount * 3; i++) {
           posArray[i] = (Math.random() - 0.5) * 10
         }
-
         particlesGeometry.setAttribute("position", new three.BufferAttribute(posArray, 3))
 
         const particlesMaterial = new three.PointsMaterial({
@@ -47,19 +48,27 @@ export function ShaderAnimation() {
         const particlesMesh = new three.Points(particlesGeometry, particlesMaterial)
         scene.add(particlesMesh)
 
-        // Animation loop
+        // Throttled mouse tracking — only update every 50ms
         let mouseX = 0
         let mouseY = 0
-
+        let lastMouseUpdate = 0
         const handleMouseMove = (event: MouseEvent) => {
+          const now = Date.now()
+          if (now - lastMouseUpdate < 50) return
+          lastMouseUpdate = now
           mouseX = (event.clientX / window.innerWidth) * 2 - 1
           mouseY = -(event.clientY / window.innerHeight) * 2 + 1
         }
+        window.addEventListener("mousemove", handleMouseMove, { passive: true })
 
-        window.addEventListener("mousemove", handleMouseMove)
+        // Throttled render: target 30fps to halve GPU load
+        let lastFrame = 0
+        const FPS_INTERVAL = 1000 / 30
 
-        const animate = () => {
+        const animate = (timestamp: number) => {
           animationFrameId = requestAnimationFrame(animate)
+          if (timestamp - lastFrame < FPS_INTERVAL) return
+          lastFrame = timestamp
 
           particlesMesh.rotation.y += 0.0005
           particlesMesh.rotation.x = mouseY * 0.1
@@ -68,33 +77,33 @@ export function ShaderAnimation() {
           renderer.render(scene, camera)
         }
 
-        animate()
+        animationFrameId = requestAnimationFrame(animate)
 
         const handleResize = () => {
           camera.aspect = window.innerWidth / window.innerHeight
           camera.updateProjectionMatrix()
           renderer.setSize(window.innerWidth, window.innerHeight)
         }
-
-        window.addEventListener("resize", handleResize)
+        window.addEventListener("resize", handleResize, { passive: true })
 
         return () => {
           window.removeEventListener("resize", handleResize)
           window.removeEventListener("mousemove", handleMouseMove)
           cancelAnimationFrame(animationFrameId)
+          particlesGeometry.dispose()
+          particlesMaterial.dispose()
           renderer.dispose()
         }
       } catch (error) {
-        console.log("[v0] Three.js failed to load:", error)
+        console.log("[shader] Three.js failed to load:", error)
       }
     }
 
-    initShader()
+    const cleanup = initShader()
 
     return () => {
-      if (animationFrameId) {
-        cancelAnimationFrame(animationFrameId)
-      }
+      if (animationFrameId) cancelAnimationFrame(animationFrameId)
+      cleanup?.then((fn) => fn?.())
     }
   }, [])
 

@@ -192,13 +192,36 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: "Failed to send email" }, { status: 500 })
     }
 
-    // Log successful submission (without sensitive data)
     console.log("Email sent successfully:", {
       id: result.data?.id,
       to: 'mk7164798@gmail.com',
       from: name,
       timestamp: new Date().toISOString()
     })
+
+    // Telegram notification (non-blocking — runs in background)
+    const tgToken = process.env.TELEGRAM_BOT_TOKEN
+    const tgChatId = process.env.TELEGRAM_CHAT_ID
+    if (tgToken && tgChatId) {
+      const tgText =
+        `🚀 *New Project Brief!*\n\n` +
+        `👤 *Name:* ${name}\n` +
+        `📧 *Email:* ${email}\n` +
+        `💰 *Budget:* ${budget || 'Not specified'}\n` +
+        `⏰ *Timeline:* ${timeline || 'Not specified'}\n` +
+        (file ? `📎 *File:* ${file.name}\n` : '') +
+        `\n📝 *Message:*\n${message.slice(0, 500)}${message.length > 500 ? '...' : ''}`
+
+      fetch(`https://api.telegram.org/bot${tgToken}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: tgChatId,
+          text: tgText,
+          parse_mode: 'Markdown',
+        }),
+      }).catch((err) => console.warn("Telegram notification failed:", err))
+    }
 
     return NextResponse.json({
       success: true,

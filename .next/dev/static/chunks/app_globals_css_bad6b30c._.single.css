@@ -100,6 +100,7 @@
     --color-red-600: #e40014;
     --color-blue-300: #90c5ff;
     --color-blue-500: #3080ff;
+    --color-zinc-950: #09090b;
     --color-black: #000;
     --color-white: #fff;
     --spacing: .25rem;
@@ -178,6 +179,7 @@
       --color-red-600: lab(48.4493% 77.4328 61.5452);
       --color-blue-300: lab(77.5052% -6.4629 -36.42);
       --color-blue-500: lab(54.1736% 13.3368 -74.6839);
+      --color-zinc-950: lab(2.51107% .242703 -.886115);
     }
   }
 }
@@ -2308,6 +2310,10 @@
     .bg-white\/10 {
       background-color: color-mix(in oklab, var(--color-white) 10%, transparent);
     }
+  }
+
+  .bg-zinc-950 {
+    background-color: var(--color-zinc-950);
   }
 
   .bg-gradient-to-b {

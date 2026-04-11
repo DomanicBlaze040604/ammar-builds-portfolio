@@ -81,6 +81,12 @@
       "namedRegex": "^/api/sitemap(?:/)?$"
     },
     {
+      "page": "/api/test-env",
+      "regex": "^/api/test\\-env(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/api/test\\-env(?:/)?$"
+    },
+    {
       "page": "/case-studies/chatbots",
       "regex": "^/case\\-studies/chatbots(?:/)?$",
       "routeKeys": {},
@@ -115,6 +121,12 @@
       "regex": "^/demo/shader\\-demo(?:/)?$",
       "routeKeys": {},
       "namedRegex": "^/demo/shader\\-demo(?:/)?$"
+    },
+    {
+      "page": "/sitemap.xml",
+      "regex": "^/sitemap\\.xml(?:/)?$",
+      "routeKeys": {},
+      "namedRegex": "^/sitemap\\.xml(?:/)?$"
     }
   ],
   "dataRoutes": [],

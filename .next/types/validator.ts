@@ -128,9 +128,54 @@ type RouteHandlerConfig<Route extends AppRouteHandlerRoutes = AppRouteHandlerRou
   type __Unused = __Check
 }
 
+// Validate ../../app/api/test-env/route.ts
+{
+  type __IsExpected<Specific extends RouteHandlerConfig<"/api/test-env">> = Specific
+  const handler = {} as typeof import("../../app/api/test-env/route.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
 
 
 
+
+
+// Validate ../../app/(site)/case-studies/chatbots/layout.tsx
+{
+  type __IsExpected<Specific extends LayoutConfig<"/case-studies/chatbots">> = Specific
+  const handler = {} as typeof import("../../app/(site)/case-studies/chatbots/layout.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../app/(site)/case-studies/flutter-app/layout.tsx
+{
+  type __IsExpected<Specific extends LayoutConfig<"/case-studies/flutter-app">> = Specific
+  const handler = {} as typeof import("../../app/(site)/case-studies/flutter-app/layout.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../app/(site)/case-studies/lead-gen/layout.tsx
+{
+  type __IsExpected<Specific extends LayoutConfig<"/case-studies/lead-gen">> = Specific
+  const handler = {} as typeof import("../../app/(site)/case-studies/lead-gen/layout.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
+
+// Validate ../../app/(site)/case-studies/n8n-workflows/layout.tsx
+{
+  type __IsExpected<Specific extends LayoutConfig<"/case-studies/n8n-workflows">> = Specific
+  const handler = {} as typeof import("../../app/(site)/case-studies/n8n-workflows/layout.js")
+  type __Check = __IsExpected<typeof handler>
+  // @ts-ignore
+  type __Unused = __Check
+}
 
 // Validate ../../app/layout.tsx
 {

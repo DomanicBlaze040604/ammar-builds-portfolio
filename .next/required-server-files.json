@@ -55,8 +55,8 @@
       ],
       "maximumRedirects": 3,
       "dangerouslyAllowLocalIP": false,
-      "dangerouslyAllowSVG": false,
-      "contentSecurityPolicy": "script-src 'none'; frame-src 'none'; sandbox;",
+      "dangerouslyAllowSVG": true,
+      "contentSecurityPolicy": "default-src 'none'; style-src 'unsafe-inline'; sandbox;",
       "contentDispositionType": "attachment",
       "localPatterns": [
         {
@@ -72,6 +72,10 @@
         {
           "protocol": "https",
           "hostname": "images.pexels.com"
+        },
+        {
+          "protocol": "https",
+          "hostname": "images.unsplash.com"
         },
         {
           "protocol": "https",
@@ -92,6 +96,14 @@
         {
           "protocol": "https",
           "hostname": "hp.gov.in"
+        },
+        {
+          "protocol": "https",
+          "hostname": "forzeo.com"
+        },
+        {
+          "protocol": "https",
+          "hostname": "seenitdigital.netlify.app"
         }
       ],
       "qualities": [
@@ -199,7 +211,7 @@
       "workerThreads": false,
       "optimizeCss": true,
       "nextScriptWorkers": false,
-      "scrollRestoration": true,
+      "scrollRestoration": false,
       "externalDir": false,
       "disableOptimizedLoading": false,
       "gzipSize": true,
@@ -349,8 +361,8 @@
     ".next\\server\\next-font-manifest.js",
     ".next\\server\\next-font-manifest.json",
     ".next\\required-server-files.json",
-    ".next\\static\\chunks\\8e4c00320cd5a88d.css",
-    ".next\\static\\chunks\\c98a649f53546446.css"
+    ".next\\static\\chunks\\6a7b3eda1a553bf2.css",
+    ".next\\static\\chunks\\7142f2f944cea164.css"
   ],
   "ignore": []
 }

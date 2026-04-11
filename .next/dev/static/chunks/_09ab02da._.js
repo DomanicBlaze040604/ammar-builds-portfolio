@@ -19,9 +19,11 @@ function ShaderAnimation() {
         "ShaderAnimation.useEffect": ()=>{
             const canvas = canvasRef.current;
             if (!canvas) return;
+            // Skip heavy animation on low-end devices (navigator.hardwareConcurrency <= 4)
+            const isLowEnd = typeof navigator !== "undefined" && navigator.hardwareConcurrency <= 4;
+            const particlesCount = isLowEnd ? 400 : 700;
             let animationFrameId;
             let three;
-            // Dynamic import of Three.js
             const initShader = {
                 "ShaderAnimation.useEffect.initShader": async ()=>{
                     try {
@@ -31,14 +33,14 @@ function ShaderAnimation() {
                         const renderer = new three.WebGLRenderer({
                             canvas,
                             alpha: true,
-                            antialias: true
+                            antialias: false
                         });
                         renderer.setSize(window.innerWidth, window.innerHeight);
+                        // Cap pixel ratio at 1.5 — prevents heavy GPU load on hi-dpi screens
+                        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
                         renderer.setClearColor(0x000000, 0);
                         camera.position.z = 5;
-                        // Create particle system for elegant background
                         const particlesGeometry = new three.BufferGeometry();
-                        const particlesCount = 1000;
                         const posArray = new Float32Array(particlesCount * 3);
                         for(let i = 0; i < particlesCount * 3; i++){
                             posArray[i] = (Math.random() - 0.5) * 10;
@@ -53,26 +55,37 @@ function ShaderAnimation() {
                         });
                         const particlesMesh = new three.Points(particlesGeometry, particlesMaterial);
                         scene.add(particlesMesh);
-                        // Animation loop
+                        // Throttled mouse tracking — only update every 50ms
                         let mouseX = 0;
                         let mouseY = 0;
+                        let lastMouseUpdate = 0;
                         const handleMouseMove = {
                             "ShaderAnimation.useEffect.initShader.handleMouseMove": (event)=>{
+                                const now = Date.now();
+                                if (now - lastMouseUpdate < 50) return;
+                                lastMouseUpdate = now;
                                 mouseX = event.clientX / window.innerWidth * 2 - 1;
                                 mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
                             }
                         }["ShaderAnimation.useEffect.initShader.handleMouseMove"];
-                        window.addEventListener("mousemove", handleMouseMove);
+                        window.addEventListener("mousemove", handleMouseMove, {
+                            passive: true
+                        });
+                        // Throttled render: target 30fps to halve GPU load
+                        let lastFrame = 0;
+                        const FPS_INTERVAL = 1000 / 30;
                         const animate = {
-                            "ShaderAnimation.useEffect.initShader.animate": ()=>{
+                            "ShaderAnimation.useEffect.initShader.animate": (timestamp)=>{
                                 animationFrameId = requestAnimationFrame(animate);
+                                if (timestamp - lastFrame < FPS_INTERVAL) return;
+                                lastFrame = timestamp;
                                 particlesMesh.rotation.y += 0.0005;
                                 particlesMesh.rotation.x = mouseY * 0.1;
                                 particlesMesh.rotation.y += mouseX * 0.001;
                                 renderer.render(scene, camera);
                             }
                         }["ShaderAnimation.useEffect.initShader.animate"];
-                        animate();
+                        animationFrameId = requestAnimationFrame(animate);
                         const handleResize = {
                             "ShaderAnimation.useEffect.initShader.handleResize": ()=>{
                                 camera.aspect = window.innerWidth / window.innerHeight;
@@ -80,26 +93,31 @@ function ShaderAnimation() {
                                 renderer.setSize(window.innerWidth, window.innerHeight);
                             }
                         }["ShaderAnimation.useEffect.initShader.handleResize"];
-                        window.addEventListener("resize", handleResize);
+                        window.addEventListener("resize", handleResize, {
+                            passive: true
+                        });
                         return ({
                             "ShaderAnimation.useEffect.initShader": ()=>{
                                 window.removeEventListener("resize", handleResize);
                                 window.removeEventListener("mousemove", handleMouseMove);
                                 cancelAnimationFrame(animationFrameId);
+                                particlesGeometry.dispose();
+                                particlesMaterial.dispose();
                                 renderer.dispose();
                             }
                         })["ShaderAnimation.useEffect.initShader"];
                     } catch (error) {
-                        console.log("[v0] Three.js failed to load:", error);
+                        console.log("[shader] Three.js failed to load:", error);
                     }
                 }
             }["ShaderAnimation.useEffect.initShader"];
-            initShader();
+            const cleanup = initShader();
             return ({
                 "ShaderAnimation.useEffect": ()=>{
-                    if (animationFrameId) {
-                        cancelAnimationFrame(animationFrameId);
-                    }
+                    if (animationFrameId) cancelAnimationFrame(animationFrameId);
+                    cleanup?.then({
+                        "ShaderAnimation.useEffect": (fn)=>fn?.()
+                    }["ShaderAnimation.useEffect"]);
                 }
             })["ShaderAnimation.useEffect"];
         }
@@ -112,7 +130,7 @@ function ShaderAnimation() {
         }
     }, void 0, false, {
         fileName: "[project]/components/ui/shader-lines.tsx",
-        lineNumber: 102,
+        lineNumber: 111,
         columnNumber: 5
     }, this);
 }
@@ -712,7 +730,7 @@ function ContactForm() {
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$label$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Label"], {
                                                 htmlFor: "budget",
                                                 className: "text-base font-semibold",
-                                                children: "Project Budget"
+                                                children: "Project Budget (INR)"
                                             }, void 0, false, {
                                                 fileName: "[project]/components/ui/contact-form.tsx",
                                                 lineNumber: 166,
@@ -736,32 +754,32 @@ function ContactForm() {
                                                         columnNumber: 17
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
-                                                        value: "<$5k",
-                                                        children: "Less than $5,000"
+                                                        value: "₹30k-₹50k",
+                                                        children: "₹30,000 - ₹50,000"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/ui/contact-form.tsx",
                                                         lineNumber: 176,
                                                         columnNumber: 17
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
-                                                        value: "$5k-$10k",
-                                                        children: "$5,000 - $10,000"
+                                                        value: "₹50k-₹75k",
+                                                        children: "₹50,000 - ₹75,000"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/ui/contact-form.tsx",
                                                         lineNumber: 177,
                                                         columnNumber: 17
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
-                                                        value: "$10k-$25k",
-                                                        children: "$10,000 - $25,000"
+                                                        value: "₹75k-₹1L",
+                                                        children: "₹75,000 - ₹1,00,000"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/ui/contact-form.tsx",
                                                         lineNumber: 178,
                                                         columnNumber: 17
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
-                                                        value: "$25k+",
-                                                        children: "$25,000+"
+                                                        value: "₹1L+",
+                                                        children: "₹1,00,000+"
                                                     }, void 0, false, {
                                                         fileName: "[project]/components/ui/contact-form.tsx",
                                                         lineNumber: 179,
@@ -1224,10 +1242,11 @@ function PortfolioCard({ project, index }) {
             once: true
         },
         transition: {
-            delay: index * 0.08,
-            duration: 0.7,
+            delay: Math.min(index * 0.06, 0.36),
+            duration: 0.5,
             type: "spring",
-            stiffness: 100
+            stiffness: 120,
+            damping: 20
         },
         className: "h-full",
         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Card"], {
@@ -1237,27 +1256,27 @@ function PortfolioCard({ project, index }) {
                     className: "absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 pointer-events-none"
                 }, void 0, false, {
                     fileName: "[project]/components/ui/portfolio-card.tsx",
-                    lineNumber: 37,
+                    lineNumber: 39,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    className: "relative h-64 overflow-hidden",
+                    className: `relative h-64 overflow-hidden${project.thumbnailStyle === "contain" ? " bg-zinc-950 flex items-center justify-center" : ""}`,
                     children: [
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                             src: project.thumbnail || "/placeholder.svg",
                             alt: project.title,
                             fill: true,
-                            className: "object-cover transition-all duration-700 group-hover:scale-110"
+                            className: `transition-all duration-700 group-hover:scale-110 ${project.thumbnailStyle === "contain" ? "object-contain p-8" : "object-cover"}`
                         }, void 0, false, {
                             fileName: "[project]/components/ui/portfolio-card.tsx",
-                            lineNumber: 40,
+                            lineNumber: 42,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                             className: "absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent"
                         }, void 0, false, {
                             fileName: "[project]/components/ui/portfolio-card.tsx",
-                            lineNumber: 46,
+                            lineNumber: 48,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["motion"].div, {
@@ -1272,25 +1291,25 @@ function PortfolioCard({ project, index }) {
                                         className: "w-3 h-3 fill-current"
                                     }, void 0, false, {
                                         fileName: "[project]/components/ui/portfolio-card.tsx",
-                                        lineNumber: 50,
+                                        lineNumber: 52,
                                         columnNumber: 15
                                     }, this),
                                     project.category
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/components/ui/portfolio-card.tsx",
-                                lineNumber: 49,
+                                lineNumber: 51,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/components/ui/portfolio-card.tsx",
-                            lineNumber: 48,
+                            lineNumber: 50,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/components/ui/portfolio-card.tsx",
-                    lineNumber: 39,
+                    lineNumber: 41,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$card$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["CardContent"], {
@@ -1301,7 +1320,7 @@ function PortfolioCard({ project, index }) {
                             children: project.title
                         }, void 0, false, {
                             fileName: "[project]/components/ui/portfolio-card.tsx",
-                            lineNumber: 57,
+                            lineNumber: 59,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1309,7 +1328,7 @@ function PortfolioCard({ project, index }) {
                             children: project.description
                         }, void 0, false, {
                             fileName: "[project]/components/ui/portfolio-card.tsx",
-                            lineNumber: 60,
+                            lineNumber: 62,
                             columnNumber: 11
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -1323,19 +1342,19 @@ function PortfolioCard({ project, index }) {
                                     className: "w-4 h-4 group-hover/link:translate-x-1 group-hover/link:-translate-y-1 transition-transform duration-300"
                                 }, void 0, false, {
                                     fileName: "[project]/components/ui/portfolio-card.tsx",
-                                    lineNumber: 71,
+                                    lineNumber: 73,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/components/ui/portfolio-card.tsx",
-                            lineNumber: 64,
+                            lineNumber: 66,
                             columnNumber: 11
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/components/ui/portfolio-card.tsx",
-                    lineNumber: 56,
+                    lineNumber: 58,
                     columnNumber: 9
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["motion"].div, {
@@ -1355,18 +1374,18 @@ function PortfolioCard({ project, index }) {
                     }
                 }, void 0, false, {
                     fileName: "[project]/components/ui/portfolio-card.tsx",
-                    lineNumber: 75,
+                    lineNumber: 77,
                     columnNumber: 9
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/components/ui/portfolio-card.tsx",
-            lineNumber: 36,
+            lineNumber: 38,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/components/ui/portfolio-card.tsx",
-        lineNumber: 24,
+        lineNumber: 25,
         columnNumber: 5
     }, this);
 }
@@ -2321,9 +2340,9 @@ const AboutServices = ()=>{
             src: "https://images.unsplash.com/photo-1677442136019-21780ecad995?q=80&w=3540&auto=format&fit=crop"
         },
         {
-            title: "Google Solution Challenge",
-            role: "Global Top 100 Finalist | 2024",
-            quote: "Selected among the top 100 teams globally in Google's prestigious Solution Challenge, building an AI-powered solution addressing critical social impact challenges.",
+            title: "Google Solution Challenge 2025",
+            role: "Global Top 100 Finalist | 2025",
+            quote: "Selected among the top 100 teams globally in Google's prestigious Solution Challenge 2025, building an AI-powered solution addressing critical social impact challenges.",
             src: "https://images.unsplash.com/photo-1573804633927-bfcbcd909acd?q=80&w=3540&auto=format&fit=crop"
         },
         {
@@ -2355,8 +2374,8 @@ const AboutServices = ()=>{
             value: "2hrs"
         },
         {
-            label: "Google Top 100",
-            value: "2024"
+            label: "GSC Top 100",
+            value: "2025"
         },
         {
             label: "B.E. AI&ML",
@@ -2846,11 +2865,27 @@ var _s = __turbopack_context__.k.signature();
 ;
 const projects = [
     {
+        title: "Forzeo Dashboard",
+        description: "GEO Analytics Dashboard — AI Search Monitoring & Brand Visibility",
+        url: "https://app.forzeo.com",
+        thumbnail: "https://forzeo.com/assets/forzeo-logo-BqX0_iQz.svg",
+        thumbnailStyle: "contain",
+        category: "AI/Analytics"
+    },
+    {
         title: "Government of the Republic of Dominica",
         description: "Official News & Information Portal",
         url: "https://www.dominicanews.dm",
         thumbnail: "/images/dn-logo.png",
         category: "Government"
+    },
+    {
+        title: "SeenIt Digital",
+        description: "India's First Video-First UGC Trust Review Platform",
+        url: "https://seenitdigital.netlify.app",
+        thumbnail: "https://seenitdigital.netlify.app/favicon.ico",
+        thumbnailStyle: "contain",
+        category: "Social/UGC"
     },
     {
         title: "Express Impex",
@@ -2886,6 +2921,14 @@ const projects = [
         url: "https://www.easybezy.in",
         thumbnail: "https://files.catbox.moe/8mx5um.jpg",
         category: "Digital Services"
+    },
+    {
+        title: "Forzeo",
+        description: "AI Visibility Analytics & GEO Platform for Enterprise Brands",
+        url: "https://forzeo.com",
+        thumbnail: "https://forzeo.com/assets/forzeo-logo-BqX0_iQz.svg",
+        thumbnailStyle: "contain",
+        category: "AI/Analytics"
     },
     {
         title: "ZuZi Fashion",
@@ -2960,7 +3003,7 @@ function Home() {
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$shader$2d$lines$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ShaderAnimation"], {}, void 0, false, {
                 fileName: "[project]/app/page.tsx",
-                lineNumber: 117,
+                lineNumber: 141,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
@@ -2971,14 +3014,14 @@ function Home() {
                         variant: "primary"
                     }, void 0, false, {
                         fileName: "[project]/app/page.tsx",
-                        lineNumber: 123,
+                        lineNumber: 147,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "absolute inset-0 bg-gradient-radial from-primary/10 via-transparent to-transparent"
                     }, void 0, false, {
                         fileName: "[project]/app/page.tsx",
-                        lineNumber: 125,
+                        lineNumber: 149,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["motion"].div, {
@@ -3014,7 +3057,7 @@ function Home() {
                                             className: "absolute inset-0 bg-primary/30 blur-2xl rounded-full"
                                         }, void 0, false, {
                                             fileName: "[project]/app/page.tsx",
-                                            lineNumber: 138,
+                                            lineNumber: 162,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -3025,13 +3068,13 @@ function Home() {
                                             className: "rounded-full shadow-2xl border-4 border-primary/50 neon-glow relative z-10"
                                         }, void 0, false, {
                                             fileName: "[project]/app/page.tsx",
-                                            lineNumber: 139,
+                                            lineNumber: 163,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/page.tsx",
-                                    lineNumber: 132,
+                                    lineNumber: 156,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["motion"].div, {
@@ -3063,7 +3106,7 @@ function Home() {
                                                     children: "Ammar"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/page.tsx",
-                                                    lineNumber: 155,
+                                                    lineNumber: 179,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3071,13 +3114,13 @@ function Home() {
                                                     children: "Builds"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/page.tsx",
-                                                    lineNumber: 156,
+                                                    lineNumber: 180,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/page.tsx",
-                                            lineNumber: 154,
+                                            lineNumber: 178,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3085,7 +3128,7 @@ function Home() {
                                             children: "Elite software development for businesses that demand excellence"
                                         }, void 0, false, {
                                             fileName: "[project]/app/page.tsx",
-                                            lineNumber: 159,
+                                            lineNumber: 183,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3098,14 +3141,14 @@ function Home() {
                                                             className: "w-2 h-2 rounded-full bg-primary animate-pulse neon-glow"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/page.tsx",
-                                                            lineNumber: 165,
+                                                            lineNumber: 189,
                                                             columnNumber: 19
                                                         }, this),
                                                         "Full-Stack"
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/page.tsx",
-                                                    lineNumber: 164,
+                                                    lineNumber: 188,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3115,14 +3158,14 @@ function Home() {
                                                             className: "w-2 h-2 rounded-full bg-accent animate-pulse neon-glow"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/page.tsx",
-                                                            lineNumber: 169,
+                                                            lineNumber: 193,
                                                             columnNumber: 19
                                                         }, this),
                                                         "AI/ML"
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/page.tsx",
-                                                    lineNumber: 168,
+                                                    lineNumber: 192,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -3132,26 +3175,26 @@ function Home() {
                                                             className: "w-2 h-2 rounded-full bg-lavender animate-pulse neon-glow"
                                                         }, void 0, false, {
                                                             fileName: "[project]/app/page.tsx",
-                                                            lineNumber: 173,
+                                                            lineNumber: 197,
                                                             columnNumber: 19
                                                         }, this),
                                                         "Design"
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/page.tsx",
-                                                    lineNumber: 172,
+                                                    lineNumber: 196,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/page.tsx",
-                                            lineNumber: 163,
+                                            lineNumber: 187,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/page.tsx",
-                                    lineNumber: 148,
+                                    lineNumber: 172,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["motion"].div, {
@@ -3181,18 +3224,18 @@ function Home() {
                                                         className: "ml-2 w-5 h-5"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/page.tsx",
-                                                        lineNumber: 192,
+                                                        lineNumber: 216,
                                                         columnNumber: 19
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/page.tsx",
-                                                lineNumber: 190,
+                                                lineNumber: 214,
                                                 columnNumber: 17
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/app/page.tsx",
-                                            lineNumber: 185,
+                                            lineNumber: 209,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$button$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Button"], {
@@ -3204,18 +3247,18 @@ function Home() {
                                                 children: "Start Project"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/page.tsx",
-                                                lineNumber: 200,
+                                                lineNumber: 224,
                                                 columnNumber: 17
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/app/page.tsx",
-                                            lineNumber: 195,
+                                            lineNumber: 219,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/page.tsx",
-                                    lineNumber: 179,
+                                    lineNumber: 203,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$framer$2d$motion$2f$dist$2f$es$2f$render$2f$components$2f$motion$2f$proxy$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["motion"].div, {
@@ -3251,7 +3294,7 @@ function Home() {
                                                     children: stat.value
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/page.tsx",
-                                                    lineNumber: 216,
+                                                    lineNumber: 240,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3259,35 +3302,35 @@ function Home() {
                                                     children: stat.label
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/page.tsx",
-                                                    lineNumber: 217,
+                                                    lineNumber: 241,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, index, true, {
                                             fileName: "[project]/app/page.tsx",
-                                            lineNumber: 215,
+                                            lineNumber: 239,
                                             columnNumber: 17
                                         }, this))
                                 }, void 0, false, {
                                     fileName: "[project]/app/page.tsx",
-                                    lineNumber: 204,
+                                    lineNumber: 228,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/page.tsx",
-                            lineNumber: 131,
+                            lineNumber: 155,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/app/page.tsx",
-                        lineNumber: 127,
+                        lineNumber: 151,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/page.tsx",
-                lineNumber: 119,
+                lineNumber: 143,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$etheral$2d$shadow$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["EtheralShadow"], {
@@ -3305,7 +3348,7 @@ function Home() {
                 children: [
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$about$2d$services$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                         fileName: "[project]/app/page.tsx",
-                        lineNumber: 233,
+                        lineNumber: 257,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
@@ -3341,13 +3384,13 @@ function Home() {
                                                         children: "Projects"
                                                     }, void 0, false, {
                                                         fileName: "[project]/app/page.tsx",
-                                                        lineNumber: 246,
+                                                        lineNumber: 270,
                                                         columnNumber: 28
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/app/page.tsx",
-                                                lineNumber: 245,
+                                                lineNumber: 269,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3355,13 +3398,13 @@ function Home() {
                                                 children: "Real solutions delivering real results for businesses and startups across industries"
                                             }, void 0, false, {
                                                 fileName: "[project]/app/page.tsx",
-                                                lineNumber: 248,
+                                                lineNumber: 272,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/page.tsx",
-                                        lineNumber: 238,
+                                        lineNumber: 262,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -3371,28 +3414,28 @@ function Home() {
                                                 index: index
                                             }, project.title, false, {
                                                 fileName: "[project]/app/page.tsx",
-                                                lineNumber: 255,
+                                                lineNumber: 279,
                                                 columnNumber: 19
                                             }, this))
                                     }, void 0, false, {
                                         fileName: "[project]/app/page.tsx",
-                                        lineNumber: 253,
+                                        lineNumber: 277,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/page.tsx",
-                                lineNumber: 237,
+                                lineNumber: 261,
                                 columnNumber: 13
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/app/page.tsx",
-                            lineNumber: 236,
+                            lineNumber: 260,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/app/page.tsx",
-                        lineNumber: 235,
+                        lineNumber: 259,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("section", {
@@ -3427,13 +3470,13 @@ function Home() {
                                                     children: "Your Vision"
                                                 }, void 0, false, {
                                                     fileName: "[project]/app/page.tsx",
-                                                    lineNumber: 275,
+                                                    lineNumber: 299,
                                                     columnNumber: 29
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/app/page.tsx",
-                                            lineNumber: 274,
+                                            lineNumber: 298,
                                             columnNumber: 15
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -3441,41 +3484,41 @@ function Home() {
                                             children: "From concept to launch in record time. Choose your preferred contact method below."
                                         }, void 0, false, {
                                             fileName: "[project]/app/page.tsx",
-                                            lineNumber: 277,
+                                            lineNumber: 301,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/page.tsx",
-                                    lineNumber: 267,
+                                    lineNumber: 291,
                                     columnNumber: 13
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ui$2f$contact$2d$form$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ContactForm"], {}, void 0, false, {
                                     fileName: "[project]/app/page.tsx",
-                                    lineNumber: 282,
+                                    lineNumber: 306,
                                     columnNumber: 13
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/page.tsx",
-                            lineNumber: 266,
+                            lineNumber: 290,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/app/page.tsx",
-                        lineNumber: 262,
+                        lineNumber: 286,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/page.tsx",
-                lineNumber: 226,
+                lineNumber: 250,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/page.tsx",
-        lineNumber: 116,
+        lineNumber: 140,
         columnNumber: 5
     }, this);
 }

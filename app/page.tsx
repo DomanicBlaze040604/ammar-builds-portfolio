@@ -123,6 +123,14 @@ const projects = [
     thumbnail: "https://i.postimg.cc/15X2gjbB/office-view.jpg",
     category: "Photography",
   },
+  {
+    title: "Hi-SO Rooftop",
+    description: "Mumbai's Stylish Rooftop All Day Dining & Bar",
+    url: "https://hi-sorooftop.netlify.app/",
+    thumbnail: "https://hi-sorooftop.netlify.app/favicon.ico",
+    thumbnailStyle: "contain" as const,
+    category: "Hospitality",
+  },
 ]
 
 export default function Home() {
